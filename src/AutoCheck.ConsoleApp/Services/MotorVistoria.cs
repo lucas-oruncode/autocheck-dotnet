@@ -40,6 +40,60 @@ namespace AutoCheck.ConsoleApp.Services
             return ((double)pontuacaoObtida / pontuacaoMaxima) * 100;
         }
 
+        public string ClassificarVeiculo(double percentualAprovacao)
+        {
+            if (percentualAprovacao >= 90)
+            {
+                return "Aprovado com Excelência";
+            }
+            else if (percentualAprovacao < 60)
+            {
+                return "Reprovado na Vistoria";
+            }
+            else
+            {
+                return "Aprovado com Apontamentos";
+            }
+        }
 
+        public List<ItemVistoria> ObterItensCriticos(Veiculo veiculo)
+        {
+            List<ItemVistoria> itensCriticos = new List<ItemVistoria>();
+
+            foreach (var item in veiculo.VistoriaRealizada)
+            {
+                if (item.Status == "Ruim")
+                {
+                    itensCriticos.Add(item);
+                }
+            }
+
+            return itensCriticos;
+        }
+
+        public List<ItemVistoria> ObterItensAtencao(Veiculo veiculo)
+        {
+            List<ItemVistoria> itensAtencao = new List<ItemVistoria>();
+
+            foreach (var item in veiculo.VistoriaRealizada)
+            {
+                if (item.Status == "Regular")
+                {
+                    itensAtencao.Add(item);
+                }
+            }
+
+            return itensAtencao;
+        }
+
+        public string GerarRecomendacao(ItemVistoria item)
+        {
+            if (item.Status == "Ruim")
+            {
+                return $"{item.Nome}: reparo/troca obrigatório antes da liberação.";
+            }
+
+            return $"{item.Nome}: revisão preventiva recomendada.";
+        }
     }
 }
